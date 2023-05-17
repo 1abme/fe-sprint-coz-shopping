@@ -8,22 +8,22 @@ import Footer from './components/Footer';
 
 function App() {
   return (
-<BrowserRouter>
-      <Header/>
+    <BrowserRouter>
+      <Header />
       <Routes>
         <Route
-          path="/" element={<MainPage/>}
+          path="/" element={<MainPage />}
         />
         <Route
           path="/products/list"
-          element={<ProductListPage/>}
+          element={<ProductListPage />}
         />
         <Route
           path="/bookmark"
-          element={<BookmarkPage/>}
+          element={<BookmarkPage />}
         />
       </Routes>
-      <Footer/>
+      <Footer />
     </BrowserRouter>
   );
 }
