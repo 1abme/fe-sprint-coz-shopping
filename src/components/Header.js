@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-left: 6%;
   padding-right: 6%;
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  height: 80px;
 `;
 
-const Logo = styled.span`
+const Logo = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -20,25 +23,35 @@ const LogoImage = styled.img`
   width: 55px;
   margin-right: 10px;
 `;
-
-const LogoText = styled.span`
-  font-weight: bold;
+const LogoText = styled.h1`
+  font-weight: 700;
+  font-size: 32px;
 `;
 
-const Hamburger = styled.div`
+const Hamburger = styled.button`
   cursor: pointer;
   position: relative;
+  border: 0;
+  background-color: transparent;
 `;
 
-const DropDownContainer = styled.div`
+const DropDownContainer = styled.ul`
   background-color: #fff;
-  border: 1px solid #ccc;
   padding: 10px;
   position: absolute;
   top: 100%;
   right: 0;
   width: 200px;
   z-index: 1;
+  font-size: 16px;
+  cursor: auto;
+  filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.1));
+  border-radius: 12px;
+
+  a{
+    text-decoration: none;
+    //border-top: 0.5px solid rgba(0, 0, 0, 0.1) 안됨ㅠ
+  }
 `;
 
 const DropDownItem = styled.li`
@@ -47,28 +60,38 @@ const DropDownItem = styled.li`
   padding: 10px;
   font-size: 16px;
   color: #333;
-  cursor: pointer;
 
   img {
     width: 20px;
     height: 20px;
     margin-right: 10px;
   }
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
+  
 `;
 
 function Header() {
   const [view, setView] = useState(false);
+  const dropDownRef = useRef()
+
+  const handleClickOutside = (event) => {
+    if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
+      setView(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   const handleClick = () => {
     setView(!view);
   };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer ref={dropDownRef}>
       <Logo>
         <Link to="/">
           <LogoImage src="../logo.svg" alt="logo" />
@@ -76,10 +99,12 @@ function Header() {
         <LogoText>COZ Shopping</LogoText>
       </Logo>
       <Hamburger onClick={handleClick}>
-        <img src="../hamberger.svg" alt="menu" />
+        <img src="../hamburger.svg" alt="menu" />
         {view && (
           <DropDownContainer>
-            <span>김혜주님, 안녕하세요!</span>
+            <DropDownItem>
+                <span>OOO님, 안녕하세요!</span>
+              </DropDownItem>
             <Link to="/products/list">
               <DropDownItem>
                 <img src="../product_icon.svg" alt="producticon" />
